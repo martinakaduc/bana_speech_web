@@ -23,7 +23,7 @@ def paginate_dataframe(dataframe, page_size, page_num):
         return None
 
     offset = page_size*(page_num-1)
-    return dataframe[offset:offset + page_size]
+    return dataframe[int(offset):int(offset + page_size)]
 
 BANA_DB = "assets/db/Bahnar_DB.xlsx"
 
