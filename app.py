@@ -1,7 +1,8 @@
 import streamlit as st
 from utils import *
 
-search_phase = ""
+if 'search_phase' not in st.session_state:
+    st.session_state.search_phase = ""
 
 if __name__ == '__main__':
     st.set_page_config(page_title="Bahnar Speech by Word")
@@ -15,10 +16,10 @@ if __name__ == '__main__':
 
     with st.container():
 
-        search_phase = st.text_input("Find the word you want", value=search_phase)
-        if st.button("Search"):
-            vietnamese_words = [search_phase in str(x) for x in local_bahnar_df["Vietnamese"]]
-            bahnaric_words = [search_phase in str(x) for x in local_bahnar_df["Bahnaric"]]
+        st.session_state.search_phase = st.text_input("Find the word you want", value=st.session_state.search_phase)
+        if st.button("Search") or st.session_state.search_phase != "":
+            vietnamese_words = [st.session_state.search_phase in str(x) for x in local_bahnar_df["Vietnamese"]]
+            bahnaric_words = [st.session_state.search_phase in str(x) for x in local_bahnar_df["Bahnaric"]]
             joint_words = [x or y for x, y in zip(vietnamese_words, bahnaric_words)]
             local_bahnar_df = local_bahnar_df[joint_words]
 
