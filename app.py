@@ -1,4 +1,5 @@
 import streamlit as st
+import numpy as np
 from utils import *
 
 if 'search_phase' not in st.session_state:
@@ -37,36 +38,40 @@ if __name__ == '__main__':
         bahnar_df_by_page = paginate_dataframe(local_bahnar_df, WORD_PER_PAGE, PAGE_NUMBER)
         # st.write(bahnar_df_by_page.to_html(index=False, na_rep="", justify="center", show_dimensions=True), unsafe_allow_html=True)
         
-        header_cols = st.columns((1, 3, 3, 1, 1, 1))
+        header_cols = st.columns((1, 2, 2, 2, 1, 1, 1))
         for i, col_header in enumerate(bahnar_df_by_page.columns):
             header_cols[i].markdown("**" + col_header + "**")
 
         for _, row in bahnar_df_by_page.iterrows():
-            cols = st.columns((1, 3, 3, 1, 1, 1))
+            cols = st.columns((1, 2, 2, 2, 1, 1, 1))
             cols[0].write(row["No."])
             cols[1].write(row["Vietnamese"])
             cols[2].write(row["Bahnaric"])
+            if row["PoS"] is np.nan:
+                cols[3].write("-")
+            else:
+                cols[3].write(row["PoS"])
 
             if row["BinhDinh"] != "-":
-                if cols[3].button("Speak", key=str(row["No."])+"_BD"):
+                if cols[4].button("Speak", key=str(row["No."])+"_BD"):
                     sound.write("<audio autoplay hidden> \
                                     <source src='%s/BD/%s' type='audio/mpeg'> \
                                  </audio>" % (bana_speech_data_url, row["Bahnaric"]), unsafe_allow_html=True)
             else:
-                cols[3].write("-")
+                cols[4].write("-")
 
             if row["KonTum"] != "-":
-                if cols[4].button("Speak", key=str(row["No."])+"_KT"):
+                if cols[5].button("Speak", key=str(row["No."])+"_KT"):
                     sound.write("<audio autoplay hidden> \
                                     <source src='%s/KT/%s' type='audio/mpeg'> \
                                  </audio>" % (bana_speech_data_url, row["Bahnaric"]), unsafe_allow_html=True)
             else:
-                cols[4].write("-")
+                cols[5].write("-")
 
             if row["GiaLai"] != "-":
-                if cols[5].button("Speak", key=str(row["No."])+"_GL"):
+                if cols[6].button("Speak", key=str(row["No."])+"_GL"):
                     sound.write("<audio autoplay hidden> \
                                     <source src='%s/GL/%s' type='audio/mpeg'> \
                                  </audio>" % (bana_speech_data_url, row["Bahnaric"]), unsafe_allow_html=True)
             else:
-                cols[5].write("-")
+                cols[6].write("-")
